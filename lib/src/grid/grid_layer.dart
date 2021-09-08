@@ -84,6 +84,7 @@ class _VectorTileLayerState extends DisposableState<VectorTileLayer>
         widget.options.tileProvider,
         () => _paintZoomScale,
         () => _mapState.zoom,
+        () => _mapState.rotation,
         widget.options.theme,
         _caches,
         widget.options.renderMode,

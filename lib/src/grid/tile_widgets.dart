@@ -12,6 +12,7 @@ class TileWidgets {
   Map<TileIdentity, Widget> _idToWidget = {};
   final ZoomScaleFunction _zoomScaleFunction;
   final ZoomFunction _zoomFunction;
+  final RotationFunction _rotationFunction;
   final Theme _theme;
   final Caches _caches;
   final RenderMode _renderMode;
@@ -21,6 +22,7 @@ class TileWidgets {
       VectorTileProvider tileProvider,
       this._zoomScaleFunction,
       this._zoomFunction,
+      this._rotationFunction,
       this._theme,
       this._caches,
       this._renderMode,
@@ -47,6 +49,7 @@ class TileWidgets {
         caches: _caches,
         zoomScaleFunction: _zoomScaleFunction,
         zoomFunction: _zoomFunction,
+        rotationFunction: _rotationFunction,
         theme: _theme,
         showTileDebugInfo: showTileDebugInfo);
   }

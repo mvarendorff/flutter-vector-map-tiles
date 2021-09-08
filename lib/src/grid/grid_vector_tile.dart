@@ -2,11 +2,11 @@ import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import 'package:vector_tile_renderer/vector_tile_renderer.dart';
 
-import 'debounce.dart';
-import '../tile_identity.dart';
-import 'disposable_state.dart';
 import '../cache/caches.dart';
 import '../options.dart';
+import '../tile_identity.dart';
+import 'debounce.dart';
+import 'disposable_state.dart';
 import 'grid_tile_positioner.dart';
 import 'tile_model.dart';
 
@@ -17,6 +17,7 @@ class GridVectorTile extends StatefulWidget {
   final Theme theme;
   final ZoomScaleFunction zoomScaleFunction;
   final ZoomFunction zoomFunction;
+  final RotationFunction rotationFunction;
   final bool showTileDebugInfo;
 
   const GridVectorTile(
@@ -26,6 +27,7 @@ class GridVectorTile extends StatefulWidget {
       required this.caches,
       required this.zoomScaleFunction,
       required this.zoomFunction,
+      required this.rotationFunction,
       required this.theme,
       required this.showTileDebugInfo})
       : super(key: key);
@@ -50,6 +52,7 @@ class _GridVectorTile extends DisposableState<GridVectorTile>
         widget.tileIdentity,
         widget.zoomScaleFunction,
         widget.zoomFunction,
+        widget.rotationFunction,
         widget.showTileDebugInfo);
     _model.startLoading();
   }
@@ -144,10 +147,14 @@ class _VectorTilePainter extends CustomPainter {
       }
     } else {
       final tileClip = tileSizer.tileClip(size, tileSizer.effectiveScale);
-      Renderer(theme: model.theme).render(canvas, model.vector!,
-          clip: tileClip,
-          zoomScaleFactor: tileSizer.effectiveScale,
-          zoom: model.lastRenderedZoom);
+      Renderer(theme: model.theme).render(
+        canvas,
+        model.vector!,
+        clip: tileClip,
+        zoomScaleFactor: tileSizer.effectiveScale,
+        zoom: model.lastRenderedZoom,
+        rotation: model.rotationFunction(),
+      );
       _lastPainted = _PaintMode.vector;
     }
     canvas.restore();

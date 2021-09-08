@@ -1,14 +1,16 @@
-import 'package:flutter/widgets.dart';
-import 'package:vector_tile_renderer/vector_tile_renderer.dart';
 import 'dart:ui' as ui;
 
-import '../options.dart';
+import 'package:flutter/widgets.dart';
+import 'package:vector_tile_renderer/vector_tile_renderer.dart';
+
 import '../cache/caches.dart';
+import '../options.dart';
 import '../tile_identity.dart';
 import 'slippy_map_translator.dart';
 
 typedef ZoomScaleFunction = double Function();
 typedef ZoomFunction = double Function();
+typedef RotationFunction = double Function();
 
 class VectorTileModel extends ChangeNotifier {
   bool _disposed = false;
@@ -21,15 +23,25 @@ class VectorTileModel extends ChangeNotifier {
   final bool showTileDebugInfo;
   final ZoomScaleFunction zoomScaleFunction;
   final ZoomFunction zoomFunction;
+  final RotationFunction rotationFunction;
   double lastRenderedZoom = double.negativeInfinity;
   double lastRenderedZoomScale = double.negativeInfinity;
+  double lastRenderedRotation = double.negativeInfinity;
   late final TileTranslation translation;
   late TileTranslation imageTranslation;
   VectorTile? vector;
   ui.Image? image;
 
-  VectorTileModel(this.renderMode, this.caches, this.theme, this.tile,
-      this.zoomScaleFunction, this.zoomFunction, this.showTileDebugInfo) {
+  VectorTileModel(
+    this.renderMode,
+    this.caches,
+    this.theme,
+    this.tile,
+    this.zoomScaleFunction,
+    this.zoomFunction,
+    this.rotationFunction,
+    this.showTileDebugInfo,
+  ) {
     final slippyMap = SlippyMapTranslator(caches.vectorTileCache.maximumZoom);
     translation = slippyMap.translate(tile);
     imageTranslation = translation;
@@ -100,8 +112,10 @@ class VectorTileModel extends ChangeNotifier {
   bool hasChanged() {
     final lastRenderedZoom = zoomFunction();
     final lastRenderedZoomScale = zoomScaleFunction();
+    final lastRenderedRotation = rotationFunction();
     return lastRenderedZoomScale != this.lastRenderedZoomScale ||
-        lastRenderedZoom != this.lastRenderedZoom;
+        lastRenderedZoom != this.lastRenderedZoom ||
+        lastRenderedRotation != this.lastRenderedRotation;
   }
 
   void requestRepaint() {
