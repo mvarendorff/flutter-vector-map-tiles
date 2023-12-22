@@ -12,7 +12,9 @@ class FutureTileProvider extends TileProvider {
   @override
   bool get supportsCancelLoading => true;
 
-  FutureTileProvider({required this.loader});
+  final Function() disposer;
+
+  FutureTileProvider({required this.loader, required this.disposer});
 
   @override
   ImageProvider getImage(TileCoordinates coordinates, TileLayer options) =>

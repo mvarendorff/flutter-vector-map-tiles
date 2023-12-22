@@ -34,14 +34,16 @@ TileProvider createRasterTileProvider(
           tileDelay)
       .orDelegate());
   return FutureTileProvider(
-      loader: TileLoader(
-              theme,
-              sprites,
-              caches.atlasImageCache?.retrieve,
-              tileSupplier,
-              rasterTileProvider,
-              tileOffset,
-              StorageImageCache(theme, caches.storageCache),
-              concurrency)
-          .loadTile);
+    loader: TileLoader(
+            theme,
+            sprites,
+            caches.atlasImageCache?.retrieve,
+            tileSupplier,
+            rasterTileProvider,
+            tileOffset,
+            StorageImageCache(theme, caches.storageCache),
+            concurrency)
+        .loadTile,
+    disposer: () {},
+  );
 }
